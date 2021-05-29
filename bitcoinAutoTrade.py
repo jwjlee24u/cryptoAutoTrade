@@ -69,14 +69,14 @@ schedule.every().hour.do(lambda: predict_price("KRW-BTC"))
 predicted_best_start_hour = datetime.datetime.now()
 def predict_best_start_hour(forecast):
     global predicted_best_start_hour
-    predicted_best_start_hour = forecast["ds"].dt.hour[forecast["daily"].argmin()]
+    predicted_best_start_hour = forecast["ds"][forecast["daily"].argmin()]
 predict_best_start_hour(prophet("KRW-BTC")[1])
 schedule.every().day.at("00:00").do(lambda: predict_best_start_hour(prophet("KRW-BTC")[1]))
 
 predicted_best_end_hour = datetime.datetime.now()
 def predict_end_hour(forecast):
     global predicted_best_end_hour
-    predicted_best_end_hour = forecast["ds"].dt.hour[forecast["daily"].argmax()]
+    predicted_best_end_hour = forecast["ds"][forecast["daily"].argmax()]
 predict_end_hour(prophet("KRW-BTC")[1])
 schedule.every().day.at("00:00").do(lambda: predict_end_hour(prophet("KRW-BTC")[1]))
 
@@ -85,11 +85,11 @@ schedule.every().day.at("00:00").do(lambda: predict_end_hour(prophet("KRW-BTC")[
 while True:
     try:
         now = datetime.datetime.now()
-        start_time = predicted_best_start_hour
-        end_time = predicted_best_end_hour
+        start_time = predicted_best_start_hour.to_pydatetime()
+        end_time = predicted_best_end_hour.to_pydatetime()
         schedule.run_pending()
 
-        if start_time < now < end_time:
+        if start_time < now < end_time - datetime.timedelta(seconds=10):
             target_price = get_target_price("KRW-BTC", 0.6)
             current_price = get_current_price("KRW-BTC")
             if target_price < current_price and current_price < predicted_close_price:
