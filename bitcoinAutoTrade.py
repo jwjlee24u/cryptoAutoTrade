@@ -34,19 +34,6 @@ def get_current_price(ticker):
 upbit = pyupbit.Upbit(access, secret)
 print("autotrade start")
 
-predicted_close_price = 0
-def predict_price(ticker):
-    global predicted_close_price
-    data = prophet(ticker)[0]
-    forecast = prophet(ticker)[1]
-    closeDf = forecast[forecast['ds'] == forecast.iloc[-1]['ds'].replace(hour=9)]
-    if len(closeDf) == 0:
-        closeDf = forecast[forecast['ds'] == data.iloc[-1]['ds'].replace(hour=9)]
-    closeValue = closeDf['yhat'].values[0]
-    predicted_close_price = closeValue
-predict_price("KRW-BTC")
-schedule.every().hour.do(lambda: predict_price("KRW-BTC"))
-
 def prophet(ticker):
     """Prophet으로 당일 종가 가격 예측"""
     df = pyupbit.get_ohlcv(ticker, interval="minute60")
@@ -59,6 +46,19 @@ def prophet(ticker):
     future = model.make_future_dataframe(periods=24, freq='H')
     forecast = model.predict(future)
     return [data, forecast]
+
+predicted_close_price = 0
+def predict_price(ticker):
+    global predicted_close_price
+    data = prophet(ticker)[0]
+    forecast = prophet(ticker)[1]
+    closeDf = forecast[forecast['ds'] == forecast.iloc[-1]['ds'].replace(hour=9)]
+    if len(closeDf) == 0:
+        closeDf = forecast[forecast['ds'] == data.iloc[-1]['ds'].replace(hour=9)]
+    closeValue = closeDf['yhat'].values[0]
+    predicted_close_price = closeValue
+predict_price("KRW-BTC")
+schedule.every().hour.do(lambda: predict_price("KRW-BTC"))
 
 # def get_start_time(ticker):
 #     """시작 시간 조회"""
