@@ -16,4 +16,3 @@ def test():
     global value
     value = 1
 test()
-print(datetime.datetime.now())
