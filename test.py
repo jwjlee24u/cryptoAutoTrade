@@ -9,10 +9,7 @@ print(upbit.get_balance("KRW-BTC"))     # KRW-XRP 조회
 print(upbit.get_balance("KRW"))         # 보유 현금 조회
 
 df = pyupbit.get_ohlcv("KRW-BTC", interval="day", count=1)
-start_time = df.index[0] + datetime.timedelta(hours = 15)
+start_time = df.index[0] + datetime.timedelta(hours = 14)
 print(start_time)
-value=0
-def test():
-    global value
-    value = 1
-test()
+end = start_time + datetime.timedelta(hours = 18)
+print(end)
