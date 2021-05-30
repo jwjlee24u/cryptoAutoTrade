@@ -63,7 +63,7 @@ schedule.every().hour.do(lambda: predict_price("KRW-BTC"))
 def get_start_time(ticker):
     """시작 시간 조회"""
     df = pyupbit.get_ohlcv(ticker, interval="day", count=1)
-    start_time = df.index[0] + datetime.timedelta(hours = 14)
+    start_time = df.index[0]
     return start_time
 
 # predicted_best_start_hour = datetime.datetime.now()
@@ -88,7 +88,7 @@ while True:
         # start_time = predicted_best_start_hour.to_pydatetime()
         # end_time = predicted_best_end_hour.to_pydatetime()
         start_time = get_start_time("KRW-BTC")
-        end_time = start_time + datetime.timedelta(hours=17)
+        end_time = start_time + datetime.timedelta(days=1)
         schedule.run_pending()
 
         if start_time < now < end_time - datetime.timedelta(seconds=10):
