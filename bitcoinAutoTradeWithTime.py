@@ -58,7 +58,7 @@ end_hour_int = 0
 def predict_best_start_hour(forecast):
     global predicted_best_start_hour, end_hour_int
     predicted_best_start_hour = forecast["ds"][forecast["daily"].argmin()]
-    end_hour_int = forecast["ds"].dt.hour[forecast["daily"].argmax()]
+    end_hour_int = int(forecast["ds"].dt.hour[forecast["daily"].argmax()])
 predict_best_start_hour(prophet("KRW-BTC")[1])
 schedule.every().day.at("00:00").do(lambda: predict_best_start_hour(prophet("KRW-BTC")[1]))
 
