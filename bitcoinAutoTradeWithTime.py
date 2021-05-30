@@ -91,19 +91,24 @@ while True:
         #end_time = predicted_best_end_hour.to_pydatetime()
         # start_time = get_start_time("KRW-BTC")
         end_time = start_time + datetime.timedelta(hours=end_hour_int)
+        print("going on1")
         schedule.run_pending()
+        print("going on2")
 
         if start_time < now < end_time - datetime.timedelta(seconds=10):
+            print("under if statement")
             target_price = get_target_price("KRW-BTC", 0.6)
             current_price = get_current_price("KRW-BTC")
             if target_price < current_price and current_price < predicted_close_price:
                 krw = get_balance("KRW")
                 if krw > 5000:
                     upbit.buy_market_order("KRW-BTC", krw*0.9995)
+                    print("bought")
         else:
             btc = get_balance("BTC")
             if btc > 0.00008:
                 upbit.sell_market_order("KRW-BTC", btc*0.9995)
+                print("sold")
         time.sleep(1)
     except Exception as e:
         print(e)
