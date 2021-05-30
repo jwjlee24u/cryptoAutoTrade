@@ -11,8 +11,8 @@ secret = "w3lalAWfTAiv9NR6cgftAIJyAKFHVZHZaRgi39zl"
 def get_target_price(ticker, k):
     """변동성 돌파 전략으로 매수 목표가 조회"""
     #2일치를 검색. 오늘 종가 = 다음날 시가
-    df = pyupbit.get_ohlcv(ticker, interval="day", count=2)
-    target_price = df.iloc[0]['close'] + (df.iloc[0]['high'] - df.iloc[0]['low']) * k
+    df = pyupbit.get_daily_ohlcv_from_base(ticker, base=2)
+    target_price = df.iloc[-2]['close'] + (df.iloc[-2]['high']-df.iloc[-2]['low']) * k
     return target_price
 
 def get_balance(ticker):
