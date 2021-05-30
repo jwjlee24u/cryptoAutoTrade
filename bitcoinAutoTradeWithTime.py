@@ -47,19 +47,6 @@ def prophet(ticker):
     forecast = model.predict(future)
     return [data, forecast]
 
-predicted_close_price = 0
-def predict_price(ticker):
-    global predicted_close_price
-    data = prophet(ticker)[0]
-    forecast = prophet(ticker)[1]
-    closeDf = forecast[forecast['ds'] == forecast.iloc[-1]['ds'].replace(hour=9)]
-    if len(closeDf) == 0:
-        closeDf = forecast[forecast['ds'] == data.iloc[-1]['ds'].replace(hour=9)]
-    closeValue = closeDf['yhat'].values[0]
-    predicted_close_price = closeValue
-predict_price("KRW-BTC")
-schedule.every().hour.do(lambda: predict_price("KRW-BTC"))
-
 # def get_start_time(ticker):
 #     """시작 시간 조회"""
 #     df = pyupbit.get_ohlcv(ticker, interval="day", count=1)
@@ -67,9 +54,11 @@ schedule.every().hour.do(lambda: predict_price("KRW-BTC"))
 #     return start_time
 
 predicted_best_start_hour = datetime.datetime.now()
+end_hour_int = 0
 def predict_best_start_hour(forecast):
-    global predicted_best_start_hour
+    global predicted_best_start_hour, end_hour_int
     predicted_best_start_hour = forecast["ds"][forecast["daily"].argmin()]
+    end_hour_int = forecast["ds"].dt.hour[forecast["daily"].argmax()]
 predict_best_start_hour(prophet("KRW-BTC")[1])
 schedule.every().day.at("00:00").do(lambda: predict_best_start_hour(prophet("KRW-BTC")[1]))
 
@@ -80,6 +69,19 @@ schedule.every().day.at("00:00").do(lambda: predict_best_start_hour(prophet("KRW
 # predict_end_hour(prophet("KRW-BTC")[1])
 # schedule.every().day.at("00:00").do(lambda: predict_end_hour(prophet("KRW-BTC")[1]))
 
+predicted_close_price = 0
+def predict_price(ticker):
+    global predicted_close_price
+    data = prophet(ticker)[0]
+    forecast = prophet(ticker)[1]
+    closeDf = forecast[forecast['ds'] == forecast.iloc[-1]['ds'].replace(hour=end_hour_int)]
+    if len(closeDf) == 0:
+        closeDf = forecast[forecast['ds'] == data.iloc[-1]['ds'].replace(hour=end_hour_int)]
+    closeValue = closeDf['yhat'].values[0]
+    predicted_close_price = closeValue
+predict_price("KRW-BTC")
+schedule.every().hour.do(lambda: predict_price("KRW-BTC"))
+
 
 # 자동매매 시작
 while True:
@@ -88,7 +90,7 @@ while True:
         start_time = predicted_best_start_hour.to_pydatetime()
         #end_time = predicted_best_end_hour.to_pydatetime()
         # start_time = get_start_time("KRW-BTC")
-        end_time = start_time + datetime.timedelta(hours=4)
+        end_time = start_time + datetime.timedelta(hours=end_hour_int)
         schedule.run_pending()
 
         if start_time < now < end_time - datetime.timedelta(seconds=10):

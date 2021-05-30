@@ -13,3 +13,12 @@ start_time = df.index[0] + datetime.timedelta(hours = 14)
 print(start_time)
 end = start_time + datetime.timedelta(hours = 18)
 print(end)
+
+val1 = 0
+val2 = 1
+def test():
+    global val1, val2
+    val1 = 2
+    val2 = 0
+test()
+print(val1, val2)
