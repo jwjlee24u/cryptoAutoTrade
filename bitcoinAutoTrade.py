@@ -75,7 +75,8 @@ while True:
         start_time = get_start_time("KRW-BTC") #start at midnight
         end_time = start_time + datetime.timedelta(hours=16)
         schedule.run_pending()
-
+        print(start_time, end_time)
+        
         if start_time < now < end_time - datetime.timedelta(seconds=10):
             print("under if")
             target_price = get_target_price("KRW-BTC", 0.1)
