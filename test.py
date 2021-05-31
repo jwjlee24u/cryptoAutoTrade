@@ -22,3 +22,8 @@ def test():
     val2 = 0
 test()
 print(val1, val2)
+
+df = pyupbit.get_daily_ohlcv_from_base("KRW-BTC", base=0)
+start_time = df.index[-1]
+end_time = start_time + datetime.timedelta(hours=16)
+print(start_time, end_time)

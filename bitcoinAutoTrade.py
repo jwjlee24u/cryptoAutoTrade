@@ -62,46 +62,35 @@ schedule.every().hour.do(lambda: predict_price("KRW-BTC"))
 
 def get_start_time(ticker):
     """시작 시간 조회"""
-    df = pyupbit.get_ohlcv(ticker, interval="day", count=1)
-    start_time = df.index[0]
+    #df = pyupbit.get_ohlcv(ticker, interval="day", count=1)
+    df = pyupbit.get_daily_ohlcv_from_base("KRW-BTC", base=0)
+    start_time = df.index[-1]
     return start_time
-
-# predicted_best_start_hour = datetime.datetime.now()
-# def predict_best_start_hour(forecast):
-#     global predicted_best_start_hour
-#     predicted_best_start_hour = forecast["ds"][forecast["daily"].argmin()]
-# predict_best_start_hour(prophet("KRW-BTC")[1])
-# schedule.every().day.at("00:00").do(lambda: predict_best_start_hour(prophet("KRW-BTC")[1]))
-
-# predicted_best_end_hour = datetime.datetime.now()
-# def predict_end_hour(forecast):
-#     global predicted_best_end_hour
-#     predicted_best_end_hour = forecast["ds"][forecast["daily"].argmax()]
-# predict_end_hour(prophet("KRW-BTC")[1])
-# schedule.every().day.at("00:00").do(lambda: predict_end_hour(prophet("KRW-BTC")[1]))
 
 
 # 자동매매 시작
 while True:
     try:
         now = datetime.datetime.now()
-        # start_time = predicted_best_start_hour.to_pydatetime()
-        # end_time = predicted_best_end_hour.to_pydatetime()
-        start_time = get_start_time("KRW-BTC")
-        end_time = start_time + datetime.timedelta(days=1)
+        start_time = get_start_time("KRW-BTC") #start at midnight
+        end_time = start_time + datetime.timedelta(hours=16)
         schedule.run_pending()
 
         if start_time < now < end_time - datetime.timedelta(seconds=10):
-            target_price = get_target_price("KRW-BTC", 0.6)
+            print("under if")
+            target_price = get_target_price("KRW-BTC", 0.1)
             current_price = get_current_price("KRW-BTC")
             if target_price < current_price and current_price < predicted_close_price:
                 krw = get_balance("KRW")
                 if krw > 5000:
                     upbit.buy_market_order("KRW-BTC", krw*0.9995)
+                    print("bought")
         else:
+            print("under else")
             btc = get_balance("BTC")
             if btc > 0.00008:
                 upbit.sell_market_order("KRW-BTC", btc*0.9995)
+                print("sold")
         time.sleep(1)
     except Exception as e:
         print(e)
