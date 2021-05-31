@@ -100,13 +100,14 @@ while True:
         start_time2 = get_start_time2("KRW-BTC") #start at midnight
         end_time2 = start_time2 + datetime.timedelta(hours=end_hour2)
         schedule.run_pending()
-        print("start1" + str(start_time1), "start2" + str(start_time2))
-        print("end1" + str(end_time1), "start2" + str(end_time2))
+        print("start1: " + str(start_time1), "start2: " + str(start_time2))
+        print("end1: " + str(end_time1), "end2: " + str(end_time2))
 
         if start_time1 < now < end_time1 - datetime.timedelta(seconds=10):
-            print("under 1")
+            print("under 1")            
             target_price = get_target_price("KRW-BTC", 0.1)
             current_price = get_current_price("KRW-BTC")
+            print("current price: " + current_price, "target price: " + target_price, "predicted_close_price: " + predicted_close_price1)
             if target_price < current_price and current_price < predicted_close_price1:
                 krw = get_balance("KRW")
                 if krw > 5000:
@@ -116,6 +117,7 @@ while True:
             print("under 2")
             target_price = get_target_price("KRW-BTC", 0.1)
             current_price = get_current_price("KRW-BTC")
+            print("current price: " + current_price, "target price: " + target_price, "predicted_close_price: " + predicted_close_price1
             if target_price < current_price and current_price < predicted_close_price2:
                 krw = get_balance("KRW")
                 if krw > 5000:
