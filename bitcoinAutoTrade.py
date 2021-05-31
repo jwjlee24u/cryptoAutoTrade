@@ -60,7 +60,7 @@ def predict_price1(ticker):
     closeValue = closeDf['yhat'].values[0]
     predicted_close_price1 = closeValue
 predict_price1("KRW-BTC")
-schedule.every().hour.do(lambda: predict_price1("KRW-BTC"))
+schedule.every(10).minutes.do(lambda: predict_price1("KRW-BTC"))
 
 predicted_close_price2 = 0
 def predict_price2(ticker):
@@ -73,7 +73,7 @@ def predict_price2(ticker):
     closeValue = closeDf['yhat'].values[0]
     predicted_close_price2 = closeValue
 predict_price2("KRW-BTC")
-schedule.every().hour.do(lambda: predict_price2("KRW-BTC"))
+schedule.every(10).minutes.do(lambda: predict_price2("KRW-BTC"))
 
 def get_start_time1(ticker):
     """시작 시간 조회"""
@@ -107,7 +107,7 @@ while True:
             print("under 1")            
             target_price = get_target_price("KRW-BTC", 0.1)
             current_price = get_current_price("KRW-BTC")
-            print("current price: " + str(current_price), "target price: " + str(target_price), "predicted_close_price: " + str(predicted_close_price1))
+            print("current price: " + str(current_price), "target price: " + str(target_price), "predicted_close_price1: " + str(predicted_close_price1))
             if target_price < current_price and current_price < predicted_close_price1:
                 krw = get_balance("KRW")
                 if krw > 5000:
@@ -117,7 +117,7 @@ while True:
             print("under 2")
             target_price = get_target_price("KRW-BTC", 0.1)
             current_price = get_current_price("KRW-BTC")
-            print("current price: " + str(current_price), "target price: " + str(target_price), "predicted_close_price: " + str(predicted_close_price2))
+            print("current price: " + str(current_price), "target price: " + str(target_price), "predicted_close_price2: " + str(predicted_close_price2))
             if target_price < current_price and current_price < predicted_close_price2:
                 krw = get_balance("KRW")
                 if krw > 5000:
