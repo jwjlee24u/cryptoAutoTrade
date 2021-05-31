@@ -87,7 +87,8 @@ schedule.every().hour.do(lambda: predict_price("KRW-BTC"))
 while True:
     try:
         now = datetime.datetime.now()
-        start_time = predicted_best_start_hour.to_pydatetime() - datetime.timedelta(days=1)
+        #start_time = predicted_best_start_hour.to_pydatetime() - datetime.timedelta(days=1)
+        start_time = predicted_best_start_hour.to_pydatetime()
         #end_time = predicted_best_end_hour.to_pydatetime()
         # start_time = get_start_time("KRW-BTC")
         end_time = start_time + datetime.timedelta(hours=end_hour_int)
