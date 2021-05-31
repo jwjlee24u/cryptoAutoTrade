@@ -117,7 +117,7 @@ while True:
             print("under 2")
             target_price = get_target_price("KRW-BTC", 0.1)
             current_price = get_current_price("KRW-BTC")
-            print("current price: " + current_price, "target price: " + target_price, "predicted_close_price: " + predicted_close_price1
+            print("current price: " + current_price, "target price: " + target_price, "predicted_close_price: " + predicted_close_price1)
             if target_price < current_price and current_price < predicted_close_price2:
                 krw = get_balance("KRW")
                 if krw > 5000:
