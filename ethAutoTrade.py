@@ -7,7 +7,7 @@ from fbprophet import Prophet
 #Access and Secret Key
 access = "wvwHae1CPfhgjBTugAm3xu3PijbpXEy0jWNj7vnI"
 secret = "w3lalAWfTAiv9NR6cgftAIJyAKFHVZHZaRgi39zl"
-end_hour1 = 7
+end_hour1 = 8
 end_hour2 = 10
 
 def get_target_price(ticker, k):
