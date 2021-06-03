@@ -32,6 +32,12 @@ def get_current_price(ticker):
     """현재가 조회"""
     return pyupbit.get_orderbook(tickers=ticker)[0]["orderbook_units"][0]["ask_price"]
 
+def get_price_10min_before(ticker):
+    return pyupbit.get_ohlcv(ticker, interval="minute10", count=1)["close"][0]
+
+def get_price_30min_before(ticker):
+    return pyupbit.get_ohlcv(ticker, interval="minute30", count=1)["close"][0]
+
 # 로그인 with ur own acess and secret key
 upbit = pyupbit.Upbit(access, secret)
 print("autotrade start")
@@ -113,6 +119,10 @@ while True:
                 if krw > 5000:
                     upbit.buy_market_order("KRW-ETH", krw*0.9995)
                     print("bought at 1")
+                if (get_price_10min_before - current_price) / get_price_10min_before > 0.015 or (get_price_30min_before - current_price) / get_price_30min_before > 0.015:
+                    upbit.sell_market_order("KRW-ETH", eth*0.9995)
+                    print("sold")
+                    time.sleep(3600)    
         elif start_time2 < now < end_time2 - datetime.timedelta(seconds=10):
             print("under 2")
             target_price = get_target_price("KRW-ETH", 0.1)
@@ -123,6 +133,10 @@ while True:
                 if krw > 5000:
                     upbit.buy_market_order("KRW-ETH", krw*0.9995)
                     print("bought at 2")
+                if (get_price_10min_before - current_price) / get_price_10min_before > 0.015 or (get_price_30min_before - current_price) / get_price_30min_before > 0.015:
+                    upbit.sell_market_order("KRW-ETH", eth*0.9995)
+                    print("sold")
+                    time.sleep(3600)    
         else:
             print("under else")
             eth = get_balance("ETH")
