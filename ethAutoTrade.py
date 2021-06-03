@@ -7,7 +7,7 @@ from fbprophet import Prophet
 #Access and Secret Key
 access = "wvwHae1CPfhgjBTugAm3xu3PijbpXEy0jWNj7vnI"
 secret = "w3lalAWfTAiv9NR6cgftAIJyAKFHVZHZaRgi39zl"
-end_hour1 = 7
+end_hour1 = 8
 end_hour2 = 10
 
 def get_target_price(ticker, k):
@@ -32,6 +32,14 @@ def get_current_price(ticker):
     """현재가 조회"""
     return pyupbit.get_orderbook(tickers=ticker)[0]["orderbook_units"][0]["ask_price"]
 
+def get_price_10min_before(ticker):
+    """10분 기준 전 가격 조회"""
+    return pyupbit.get_ohlcv(ticker, interval="minute10", count=1)
+
+def get_price_30min_before(ticker):
+    """30분 기준 전 가격 조회"""
+    return pyupbit.get_ohlcv(ticker, interval="minute30", count=1)
+
 # 로그인 with ur own acess and secret key
 upbit = pyupbit.Upbit(access, secret)
 print("autotrade start")
@@ -45,7 +53,7 @@ def prophet(ticker):
     data = df[['ds','y']]
     model = Prophet()
     model.fit(data)
-    future = model.make_future_dataframe(periods=24, freq='H')
+    future = model.make_future_dataframe(periods=10, freq='H')
     forecast = model.predict(future)
     return [data, forecast]
 
@@ -113,6 +121,12 @@ while True:
                 if krw > 5000:
                     upbit.buy_market_order("KRW-ETH", krw*0.9995)
                     print("bought at 1")
+            if (get_price_10min_before - current_price) / get_price_10min_before > 0.015 or (get_price_30min_before - current_price) / get_price_30min_before > 0.015:
+                eth = get_balance("ETH")
+                if eth > 0.00008:
+                    upbit.sell_market_order("KRW-ETH", eth*0.9995)
+                    print("sold")
+                    time.sleep(3600)
         elif start_time2 < now < end_time2 - datetime.timedelta(seconds=10):
             print("under 2")
             target_price = get_target_price("KRW-ETH", 0.1)
@@ -123,6 +137,12 @@ while True:
                 if krw > 5000:
                     upbit.buy_market_order("KRW-ETH", krw*0.9995)
                     print("bought at 2")
+            if (get_price_10min_before - current_price) / get_price_10min_before > 0.015 or (get_price_30min_before - current_price) / get_price_30min_before > 0.015:
+                eth = get_balance("ETH")
+                if eth > 0.00008:
+                    upbit.sell_market_order("KRW-ETH", eth*0.9995)
+                    print("sold")
+                    time.sleep(3600)
         else:
             print("under else")
             eth = get_balance("ETH")
