@@ -9,7 +9,7 @@ access = "wvwHae1CPfhgjBTugAm3xu3PijbpXEy0jWNj7vnI"
 secret = "w3lalAWfTAiv9NR6cgftAIJyAKFHVZHZaRgi39zl"
 end_hour1 = 8
 end_hour2 = 10
-coin = coin
+coin = "KRW-ETH"
 
 def get_target_price(ticker, k):
     """변동성 돌파 전략으로 매수 목표가 조회"""
