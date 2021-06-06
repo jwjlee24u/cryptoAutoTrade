@@ -61,9 +61,9 @@ def predict_price1(ticker):
     global predicted_close_price1
     data = prophet(ticker)[0]
     forecast = prophet(ticker)[1]
-    closeDf = forecast[forecast['ds'] == forecast.iloc[-1]['ds'].replace(hour=end_hour1)]
+    closeDf = forecast[forecast['ds'] == forecast.iloc[-1]['ds'].replace(hour=0)]
     if len(closeDf) == 0:
-        closeDf = forecast[forecast['ds'] == data.iloc[-1]['ds'].replace(hour=end_hour1)]
+        closeDf = forecast[forecast['ds'] == data.iloc[-1]['ds'].replace(hour=0)]
     closeValue = closeDf['yhat'].values[0]
     predicted_close_price1 = closeValue
 predict_price1(coin)
