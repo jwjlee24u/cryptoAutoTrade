@@ -96,6 +96,7 @@ def get_start_time1(ticker):
 #     start_time = df.index[-1]
 #     return start_time
 
+price_bought = 0
 
 
 # 자동매매 시작
@@ -111,18 +112,25 @@ while True:
         print("end1: " + str(end_time1))
 
         if start_time1 < now < end_time1 - datetime.timedelta(seconds=10):
-            print("under 1")            
+            print("under if")            
             target_price = get_target_price(coin, 0.1)
             current_price = get_current_price(coin)
             print("current price: " + str(current_price), "target price: " + str(target_price), "predicted_close_price1: " + str(predicted_close_price1))
+            print("10mins before: " + str(get_price_10min_before(coin)), "30mins before: " + str(get_price_30min_before(coin)))
+            print("10mins before ratio: " + str((get_price_10min_before(coin) - current_price) / get_price_10min_before(coin) > 0.015), "30mins before ratio: " + str((get_price_30min_before(coin) - current_price) / get_price_30min_before(coin)))
             if target_price < current_price and current_price < predicted_close_price1:
                 krw = get_balance("KRW")
                 if krw > 5000:
                     upbit.buy_market_order(coin, krw*0.9995)
-                    print("bought at 1")
-                if (get_price_10min_before(coin) - current_price) / get_price_10min_before(coin) > 0.015 or (get_price_30min_before(coin) - current_price) / get_price_30min_before(coin) > 0.015:
+                    price_bought = current_price
+                    print("bought at " + str(price_bought))
+                # if current_price < (price_bought + price_bought * 0.03):
+                #     upbit.sell_market_order(coin, eth*0.9995)
+                #     print("sold at " + str(current_price))
+                #     time.sleep(3600)
+                if (get_price_10min_before(coin) - current_price) / get_price_10min_before(coin) > 0.015 or (get_price_30min_before(coin) - current_price) / get_price_30min_before(coin) > 0.015:                    
                     upbit.sell_market_order(coin, eth*0.9995)
-                    print("sold")
+                    print("sold at " + str(current_price))
                     time.sleep(3600)    
         else:
             print("under else")
