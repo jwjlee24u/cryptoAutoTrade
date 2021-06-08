@@ -34,10 +34,10 @@ def get_current_price(ticker):
     return pyupbit.get_orderbook(tickers=ticker)[0]["orderbook_units"][0]["ask_price"]
 
 def get_price_10min_before(ticker):
-    return pyupbit.get_ohlcv(ticker, interval="minute10", count=1)["close"][0]
+    return pyupbit.get_ohlcv(ticker, interval="minute10", count=1)["open"][0]
 
 def get_price_30min_before(ticker):
-    return pyupbit.get_ohlcv(ticker, interval="minute30", count=1)["close"][0]
+    return pyupbit.get_ohlcv(ticker, interval="minute30", count=1)["open"][0]
 
 # 로그인 with ur own acess and secret key
 upbit = pyupbit.Upbit(access, secret)
@@ -117,7 +117,7 @@ while True:
             current_price = get_current_price(coin)
             print("current price: " + str(current_price), "target price: " + str(target_price), "predicted_close_price1: " + str(predicted_close_price1))
             print("10mins before: " + str(get_price_10min_before(coin)), "30mins before: " + str(get_price_30min_before(coin)))
-            print("10mins before ratio: " + str((get_price_10min_before(coin) - current_price) / get_price_10min_before(coin) > 0.015), "30mins before ratio: " + str((get_price_30min_before(coin) - current_price) / get_price_30min_before(coin)))
+            print("10mins before ratio: " + str((get_price_10min_before(coin) - current_price) / get_price_10min_before(coin)), "30mins before ratio: " + str((get_price_30min_before(coin) - current_price) / get_price_30min_before(coin)))
             if target_price < current_price and current_price < predicted_close_price1:
                 krw = get_balance("KRW")
                 if krw > 5000:
