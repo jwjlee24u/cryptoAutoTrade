@@ -129,6 +129,7 @@ while True:
                 #     print("sold at " + str(current_price))
                 #     time.sleep(3600)
                 if (get_price_10min_before(coin) - current_price) / get_price_10min_before(coin) > 0.015 or (get_price_30min_before(coin) - current_price) / get_price_30min_before(coin) > 0.015:                    
+                    eth = get_balance("ETH")
                     upbit.sell_market_order(coin, eth*0.9995)
                     print("sold at " + str(current_price))
                     time.sleep(3600)    
