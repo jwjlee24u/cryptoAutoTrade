@@ -9,9 +9,9 @@ coin = "KRW-ETH"
 
 def get_target_price(ticker, k):
     """변동성 돌파 전략으로 매수 목표가 조회"""
-    df = pyupbit.get_ohlcv(ticker, interval="day", count=2)
+    df = pyupbit.get_ohlcv(ticker, interval="minute5", count=20)
     #target_price = df.iloc[0]['close'] + (df.iloc[0]['high'] - df.iloc[0]['low']) * k
-    target_price = df['open'].median() + (df.iloc[0]['high'] - df.iloc[0]['low']) * 0.1
+    target_price = df['open'].median() + (df['high'].max() - df['low'].min()) * 0.1
     return target_price
 
 def get_start_time(ticker):
