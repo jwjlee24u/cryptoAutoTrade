@@ -51,6 +51,8 @@ while True:
         now = datetime.datetime.now()
         start_time = get_start_time(coin)
         end_time = start_time + datetime.timedelta(days=1)
+        print("start1: " + str(start_time))
+        print("end1: " + str(end_time), str(now))
 
         if start_time < now < end_time - datetime.timedelta(seconds=10):
             target_price = get_target_price(coin, 0.5)
