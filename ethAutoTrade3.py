@@ -73,13 +73,15 @@ while True:
                     upbit.buy_market_order(coin, krw*0.9995)
                     price_bought = current_price
                     print("bought at " + str(current_price))
-                if (get_price_10min_before(coin) - current_price) / get_price_10min_before(coin) > 0.015 or (get_price_30min_before(coin) - current_price) / get_price_30min_before(coin) > 0.015:                    
-                    eth = get_balance("ETH")
+            if current_price < price_bought:
+                eth = get_balance("ETH")
+                if eth > 0.00008:
                     upbit.sell_market_order(coin, eth*0.9995)
                     print("sold at " + str(current_price))
                     time.sleep(3600)
-                if current_price < price_bought:
-                    eth = get_balance("ETH")
+            if (get_price_10min_before(coin) - current_price) / get_price_10min_before(coin) > 0.001 or (get_price_30min_before(coin) - current_price) / get_price_30min_before(coin) > 0.001:                    
+                eth = get_balance("ETH")
+                if eth > 0.00008:
                     upbit.sell_market_order(coin, eth*0.9995)
                     print("sold at " + str(current_price))
                     time.sleep(3600)
