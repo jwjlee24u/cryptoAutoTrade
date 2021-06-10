@@ -30,6 +30,12 @@ def get_balance(ticker):
                 return 0
     return 0
 
+def get_ma15(ticker):
+    """15일 이동 평균선 조회"""
+    df = pyupbit.get_ohlcv(ticker, interval="day", count=15)
+    ma15 = df['close'].rolling(15).mean().iloc[-1]
+    return ma15
+
 def get_current_price(ticker):
     """현재가 조회"""
     return pyupbit.get_orderbook(tickers=ticker)[0]["orderbook_units"][0]["ask_price"]
@@ -54,8 +60,9 @@ while True:
         if start_time < now < end_time - datetime.timedelta(seconds=10):
             target_price = get_target_price(coin, 0.5)
             current_price = get_current_price(coin)
+            ma15 = get_ma15(coin)
             print("current price: " + str(current_price), "target price: " + str(target_price))
-            if target_price < current_price:
+            if target_price < current_price and ma15 < current_price:
                 krw = get_balance("KRW")
                 print("under if")
                 if krw > 5000:
