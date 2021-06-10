@@ -75,9 +75,11 @@ while True:
                     print("sold at " + str(current_price))
                     time.sleep(3600)
         else:
+            print("under else")
             eth = get_balance("ETH")
             if eth > 0.00008:
                 upbit.sell_market_order(coin, eth*0.9995)
+                print("sold")
         time.sleep(1)
     except Exception as e:
         print(e)
