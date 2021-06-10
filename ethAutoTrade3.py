@@ -10,7 +10,8 @@ coin = "KRW-ETH"
 def get_target_price(ticker, k):
     """변동성 돌파 전략으로 매수 목표가 조회"""
     df = pyupbit.get_ohlcv(ticker, interval="day", count=2)
-    target_price = df.iloc[0]['close'] + (df.iloc[0]['high'] - df.iloc[0]['low']) * k
+    #target_price = df.iloc[0]['close'] + (df.iloc[0]['high'] - df.iloc[0]['low']) * k
+    target_price = df['open'].median() + (df.iloc[0]['high'] - df.iloc[0]['low']) * 0.1
     return target_price
 
 def get_start_time(ticker):
@@ -30,11 +31,11 @@ def get_balance(ticker):
                 return 0
     return 0
 
-def get_ma15(ticker):
-    """15일 이동 평균선 조회"""
-    df = pyupbit.get_ohlcv(ticker, interval="day", count=15)
-    ma15 = df['close'].rolling(15).mean().iloc[-1]
-    return ma15
+# def get_ma15(ticker):
+#     """15일 이동 평균선 조회"""
+#     df = pyupbit.get_ohlcv(ticker, interval="day", count=15)
+#     ma15 = df['close'].rolling(15).mean().iloc[-1]
+#     return ma15
 
 def get_current_price(ticker):
     """현재가 조회"""
@@ -60,9 +61,10 @@ while True:
         if start_time < now < end_time - datetime.timedelta(seconds=10):
             target_price = get_target_price(coin, 0.1)
             current_price = get_current_price(coin)
-            ma15 = get_ma15(coin)
-            print("current price: " + str(current_price), "target price: " + str(target_price), "ma15: " + str(ma15))
-            if target_price < current_price and ma15 < current_price:
+            # ma15 = get_ma15(coin)
+            # print("current price: " + str(current_price), "target price: " + str(target_price), "ma15: " + str(ma15))
+            print("current price: " + str(current_price), "target price: " + str(target_price))
+            if target_price < current_price: #and ma15 < current_price
                 krw = get_balance("KRW")
                 print("under if")
                 if krw > 5000:
