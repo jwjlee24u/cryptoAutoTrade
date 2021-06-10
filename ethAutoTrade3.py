@@ -51,15 +51,9 @@ while True:
         now = datetime.datetime.now()
         start_time = get_start_time(coin)
         end_time = start_time + datetime.timedelta(days=1)
-        print("start1: " + str(start_time))
-        print("end1: " + str(end_time), str(now))
-        krw = get_balance("KRW")
-        eth = get_balance("ETH")
-        print("krw " + str(krw), "eth " + str(eth))
         if start_time < now < end_time - datetime.timedelta(seconds=10):
             target_price = get_target_price(coin, 0.5)
             current_price = get_current_price(coin)
-            print("under if")
             print("current price: " + str(current_price), "target price: " + str(target_price))
             if target_price < current_price:
                 krw = get_balance("KRW")
@@ -79,7 +73,6 @@ while True:
                     print("sold at " + str(current_price))
                     time.sleep(3600)
         else:
-            print("under else")
             eth = get_balance("ETH")
             if eth > 0.00008:
                 upbit.sell_market_order(coin, eth*0.9995)
