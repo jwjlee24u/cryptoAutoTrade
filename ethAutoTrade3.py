@@ -55,6 +55,7 @@ while True:
         print("end1: " + str(end_time), str(now))
         krw = get_balance("KRW")
         eth = get_balance("ETH")
+        print("krw " + str(krw), "eth " + str(eth))
         if start_time < now < end_time - datetime.timedelta(seconds=10):
             target_price = get_target_price(coin, 0.5)
             current_price = get_current_price(coin)
