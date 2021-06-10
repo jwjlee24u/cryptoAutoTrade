@@ -110,7 +110,10 @@ while True:
         schedule.run_pending()
         print("start1: " + str(start_time1))
         print("end1: " + str(end_time1))
-
+        krw = get_balance("KRW")
+        eth = get_balance("ETH")
+        print("krw " + str(krw), "eth " + str(eth))
+        
         if start_time1 < now < end_time1 - datetime.timedelta(seconds=10):
             print("under if")            
             target_price = get_target_price(coin, 0.1)
