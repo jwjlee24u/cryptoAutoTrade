@@ -55,8 +55,11 @@ while True:
         if start_time < now < end_time - datetime.timedelta(seconds=10):
             target_price = get_target_price(coin, 0.5)
             current_price = get_current_price(coin)
+            print("under if")
+            print("current price: " + str(current_price), "target price: " + str(target_price))
             if target_price < current_price:
                 krw = get_balance("KRW")
+                print("under if")
                 if krw > 5000:
                     upbit.buy_market_order(coin, krw*0.9995)
                     price_bought = current_price
