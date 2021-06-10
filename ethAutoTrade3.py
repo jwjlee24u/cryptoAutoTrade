@@ -61,7 +61,7 @@ while True:
             target_price = get_target_price(coin, 0.5)
             current_price = get_current_price(coin)
             ma15 = get_ma15(coin)
-            print("current price: " + str(current_price), "target price: " + str(target_price))
+            print("current price: " + str(current_price), "target price: " + str(target_price), "ma15: " + str(ma15))
             if target_price < current_price and ma15 < current_price:
                 krw = get_balance("KRW")
                 print("under if")
