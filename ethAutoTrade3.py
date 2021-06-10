@@ -64,6 +64,8 @@ while True:
             # ma15 = get_ma15(coin)
             # print("current price: " + str(current_price), "target price: " + str(target_price), "ma15: " + str(ma15))
             print("current price: " + str(current_price), "target price: " + str(target_price))
+            print("10mins before: " + str(get_price_10min_before(coin)), "30mins before: " + str(get_price_30min_before(coin)))
+            print("10mins before ratio: " + str((get_price_10min_before(coin) - current_price) / get_price_10min_before(coin)), "30mins before ratio: " + str((get_price_30min_before(coin) - current_price) / get_price_30min_before(coin)))
             if target_price < current_price: #and ma15 < current_price
                 krw = get_balance("KRW")
                 print("under if")
