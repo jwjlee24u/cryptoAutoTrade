@@ -5,21 +5,21 @@ import schedule
 from fbprophet import Prophet
 
 #Access and Secret Key
-access = "wvwHae1CPfhgjBTugAm3xu3PijbpXEy0jWNj7vnI"
-secret = "w3lalAWfTAiv9NR6cgftAIJyAKFHVZHZaRgi39zl"
+access = "access_key"
+secret = "secret_key"
 end_hour1 = 8
 end_hour2 = 10
 coin = "KRW-ETH"
 
 def get_target_price(ticker, k):
-    """변동성 돌파 전략으로 매수 목표가 조회"""
+    """Search Target Price using VBS"""
     #2일치를 검색. 오늘 종가 = 다음날 시가
     df = pyupbit.get_ohlcv(ticker, interval="day", count=2)
     target_price = df.iloc[0]['close'] + (df.iloc[0]['high'] - df.iloc[0]['low']) * k
     return target_price
 
 def get_balance(ticker):
-    """잔고 조회"""
+    """Check Balance"""
     balances = upbit.get_balances()
     for b in balances:
         if b['currency'] == ticker:
@@ -30,7 +30,7 @@ def get_balance(ticker):
     return 0
 
 def get_current_price(ticker):
-    """현재가 조회"""
+    """Check current price"""
     return pyupbit.get_orderbook(tickers=ticker)[0]["orderbook_units"][0]["ask_price"]
 
 def get_price_10min_before(ticker):
@@ -44,7 +44,7 @@ upbit = pyupbit.Upbit(access, secret)
 print("autotrade start")
 
 def prophet(ticker):
-    """Prophet으로 당일 종가 가격 예측"""
+    """Predict the end_value of the day using Prophet"""
     df = pyupbit.get_ohlcv(ticker, interval="minute60")
     df = df.reset_index()
     df['ds'] = df['index']
@@ -83,14 +83,14 @@ predict_price2(coin)
 schedule.every(10).minutes.do(lambda: predict_price2(coin))
 
 def get_start_time1(ticker):
-    """시작 시간 조회"""
+    """Search the start time of the first trade"""
     #df = pyupbit.get_ohlcv(ticker, interval="day", count=1)
     df = pyupbit.get_daily_ohlcv_from_base(ticker, base=0)
     start_time = df.index[-1]
     return start_time
 
 def get_start_time2(ticker):
-    """시작 시간 조회"""
+    """Search the start time of the first trade"""
     #df = pyupbit.get_ohlcv(ticker, interval="day", count=1)
     df = pyupbit.get_daily_ohlcv_from_base(ticker, base=12)
     start_time = df.index[-1]
@@ -102,9 +102,9 @@ def get_start_time2(ticker):
 while True:
     try:
         now = datetime.datetime.now()
-        start_time1 = get_start_time1(coin) #start at midnight
+        start_time1 = get_start_time1(coin) 
         end_time1 = start_time1 + datetime.timedelta(hours=end_hour1)
-        start_time2 = get_start_time2(coin) #start at midnight
+        start_time2 = get_start_time2(coin) 
         end_time2 = start_time2 + datetime.timedelta(hours=end_hour2)
         schedule.run_pending()
         print("start1: " + str(start_time1), "start2: " + str(start_time2))
